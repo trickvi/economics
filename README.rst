@@ -69,4 +69,4 @@ License
 -------
 
 economics is available under the GNU General Public License, version 3.
-See LIENCE for more details.
+See LICENCE for more details.
