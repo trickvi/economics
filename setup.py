@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from distutils.core import setup
+from setuptools import setup
 
 description = 'Functions and data manipulation for economics data'
 with open('README.rst') as readme:
