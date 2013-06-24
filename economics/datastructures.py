@@ -71,9 +71,3 @@ class MapDict(dict):
         self.map.update(mapdict.map)
         return super(MapDict,self).update(mapdict)
 
-
-def get_timestamp(date):
-    """
-    Get a POSIX style timestamp from a provided date
-    """
-    return time.mktime(date.timetuple())
