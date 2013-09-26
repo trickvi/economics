@@ -21,6 +21,8 @@ import collections
 import data
 from datastructures import MapDict
 
+CPIResult = collections.namedtuple('CPI', 'date value')
+
 class CPI(object):
     """
     Provides a Pythonic interface to Consumer Price Index data packages
@@ -74,8 +76,7 @@ class CPI(object):
         the closest method internally but sets limit to one day.
         """
         try:
-            return self.closest(date=date, country=country,
-                                limit=datetime.timedelta(days=1))
+            return CPIResult(date=date, value=self.data[country.upper()][date])
         except:
             raise KeyError('Date {date} not found in data'.format(date=date))
 
@@ -99,7 +100,7 @@ class CPI(object):
         
         # We return the CPI value if it's within the limit or raise an error
         if abs(date-closest_date) < limit:
-            return collections.namedtuple('CPI', 'date value')\
-                ._make((closest_date, country_data[closest_date]))
+            return CPIResult(date=closest_date,
+                             value=country_data[closest_date])
         else:
             raise KeyError('A date close enough was not found in data')

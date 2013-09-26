@@ -20,6 +20,8 @@ import datetime
 import collections
 import economics
 
+InflationResult = collections.namedtuple('Inflation', 'factor value')
+
 class Inflation(object):
     """
     Object to provide simple inflation computational functions
@@ -43,9 +45,9 @@ class Inflation(object):
         Helper function to compute the inflation/deflation based on a value and
         a reference value
         """
-        return collections.namedtuple('Inflation', 'factor value')\
-            ._make((value / float(reference_value),
-                    (value - reference_value) / float(reference_value)))
+        return InflationResult(
+            factor=value / float(reference_value),
+            value=(value - reference_value) / float(reference_value))
 
     def get(self, target=datetime.date.today(), reference=None, country=None):
         """
