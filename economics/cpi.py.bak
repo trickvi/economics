@@ -95,7 +95,7 @@ class CPI(object):
         country_data = self.data[country.upper()]
 
         # Find the closest date
-        closest_date = min(list(country_data.keys()),
+        closest_date = min(country_data.keys(),
                            key=lambda x: abs(date-x))
         
         # We return the CPI value if it's within the limit or raise an error
