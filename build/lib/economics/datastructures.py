@@ -29,7 +29,7 @@ class MapDict(dict):
         provided mapping (or an empty dict if not present)
         """
         self.map = {}
-        for k,v in list(mapping.items()):
+        for k,v in mapping.items():
             self.__setitem__(k,v)
         super(MapDict,self).__init__()
 

@@ -1,0 +1,14 @@
+LICENSE
+MANIFEST.in
+README.rst
+setup.py
+economics/__init__.py
+economics/cpi.py
+economics/data.py
+economics/datastructures.py
+economics/inflation.py
+economics.egg-info/PKG-INFO
+economics.egg-info/SOURCES.txt
+economics.egg-info/dependency_links.txt
+economics.egg-info/requires.txt
+economics.egg-info/top_level.txt

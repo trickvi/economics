@@ -29,7 +29,7 @@ class MapDict(dict):
         provided mapping (or an empty dict if not present)
         """
         self.map = {}
-        for k,v in list(mapping.items()):
+        for k,v in mapping.iteritems():
             self.__setitem__(k,v)
         super(MapDict,self).__init__()
 
@@ -59,7 +59,7 @@ class MapDict(dict):
         Remove a key and value (along with all mapped keys)
         """
         mappedkey = self.map.get(key, key)
-        for k,v in list(self.map.items()):
+        for k,v in self.map.items():
             if v == mappedkey:
                 del self.map[k]
         super(MapDict,self).__delitem__(mappedkey)
