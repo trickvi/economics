@@ -1,2 +1,2 @@
-from cpi import CPI
-from inflation import Inflation
+from economics.cpi import CPI
+from economics.inflation import Inflation

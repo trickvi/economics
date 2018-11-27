@@ -18,8 +18,8 @@
 
 import datetime
 import collections
-import data
-from datastructures import MapDict
+import economics.data as data
+from economics.datastructures import MapDict
 
 CPIResult = collections.namedtuple('CPI', 'date value')
 
