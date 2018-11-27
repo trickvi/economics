@@ -42,7 +42,8 @@ class Inflation(object):
         self.reference = reference
         self.country = country if country != "all" and country else None
 
-    def _compute_inflation(self, value, reference_value):
+    @staticmethod
+    def _compute_inflation(value, reference_value):
         """
         Helper function to compute the inflation/deflation based on a value and
         a reference value

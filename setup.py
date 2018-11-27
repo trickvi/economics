@@ -8,16 +8,16 @@ with open('README.rst') as readme:
     long_description = readme.read()
 
 setup(
-    name = 'economics',
-    version = '0.1.2',
-    url = 'https://github.com/tryggvib/economics',
-    license = 'GPLv3',
-    description = description,
-    long_description = long_description,
-    author = 'Tryggvi Björgvinsson',
-    author_email = 'tryggvi.bjorgvinsson@okfn.org',
-    install_requires = ['datapackage>=0.4.1'],
-    packages = ['economics'],
+    name='economics',
+    version='0.1.3',
+    url='https://github.com/tryggvib/economics',
+    license='GPLv3',
+    description=description,
+    long_description=long_description,
+    author='Jack Cooper-McEwan',
+    author_email='jackcooper93@gmail.com',
+    install_requires=['requests'],
+    packages=['economics'],
     package_dir={'economics': 'economics'},
     classifiers=[
         'Development Status :: 4 - Beta',

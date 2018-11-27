@@ -80,6 +80,7 @@ class CPI:
 
         cpi = self.data.get(country.upper(), {}).get(str(date))
         if not cpi:
-            raise ValueError("Missing CPI data for {} for {}".format(country, date))
+            raise ValueError("Missing CPI data for {} for {}".format(
+                country, date))
 
         return CPIResult(date=date, value=cpi)
