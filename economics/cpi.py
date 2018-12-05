@@ -18,89 +18,69 @@
 
 import datetime
 import collections
-import data
-from datastructures import MapDict
+import requests
 
 CPIResult = collections.namedtuple('CPI', 'date value')
 
-class CPI(object):
+
+class CPI:
     """
     Provides a Pythonic interface to Consumer Price Index data packages
     """
 
-    def __init__(self, datapackage='http://data.okfn.org/data/cpi/',
-                 country=None):
+    def __init__(self, country="all"):
         """
-        Initialise a CPI instance. Default data package location is the cpi
-        data on http://data.okfn.org
+        Initialise a CPI instance.
         """
-
-        # Store datapackage and country as instance variables
-        self.datapackage = datapackage
-        self.country = country
 
         # Initialise empty data structures
-        self.data = MapDict()
+        self.data = collections.ChainMap()
 
         # Load the data into the data structures
-        self.load()
+        self.load(country)
+        self.country = country
 
-    def load(self):
+    def load(self, country="all"):
         """
-        Load data with the data from the datapackage
+        Load data
         """
+        u = ("https://api.worldbank.org/v2/countries/{}/indicators/CPTOTSAXN"
+             "?format=json&per_page=10000").format(country)
+        r = requests.get(u)
+        j = r.json()
+        cpi_data = j[1]
 
         # Loop through the rows of the datapackage with the help of data
-        for row in data.get(self.datapackage):
+        for row in cpi_data:
             # Get the code and the name and transform to uppercase
             # so that it'll match no matter the case
-            code = row['Country Code'].upper()
-            name = row['Country Name'].upper()
+            iso_3 = row["countryiso3code"].upper()
+            iso_2 = row["country"]["id"].upper()
+            name = row["country"]['value'].upper()
             # Get the date (which is in the field Year) and the CPI value
-            date = row['Year']
-            cpi = row['CPI']
-            
-            # Try to get the data for country
-            # or initialise an empty dict
-            country_data = self.data.get(code, {})
-            # Set the CPI value for the date
-            country_data[date] = cpi
-
-            # Set the code as the default key and name as extra
-            # key in the mapdict for the country data
-            self.data[(code, name)] = country_data
+            date = row['date']
+            cpi = row['value']
+            for key in [iso_3, iso_2, name]:
+                existing = self.data.get(key, {})
+                existing[str(date)] = cpi
+                if key:
+                    self.data[key] = existing
 
     def get(self, date=datetime.date.today(), country=None):
         """
         Get the CPI value for a specific time. Defaults to today. This uses
         the closest method internally but sets limit to one day.
         """
-        try:
-            return CPIResult(date=date, value=self.data[country.upper()][date])
-        except:
-            raise KeyError('Date {date} not found in data'.format(date=date))
+        if not country:
+            country = self.country
+        if country == "all":
+            raise ValueError("You need to specify a country")
+        if not isinstance(date, str) and not isinstance(date, int):
+            date = date.year
 
-    def closest(self, date=datetime.date.today(), country=None,
-                limit=datetime.timedelta(days=366)):
-        """
-        Get the closest CPI value for a specified date. The date defaults to
-        today. A limit can be provided to exclude all values for dates further
-        away than defined by the limit. This defaults to 366 days.
-        """
+        cpi = self.data.get(country.upper(), {}).get(str(date))
+        if not cpi:
+            raise ValueError("Missing CPI data for {} for {}".format(
+                country, date))
 
-        # Try to get the country
-        country = self.country if country is None else country
-
-        # Get the data for the given country (we store it as uppercase)
-        country_data = self.data[country.upper()]
-
-        # Find the closest date
-        closest_date = min(country_data.keys(),
-                           key=lambda x: abs(date-x))
-        
-        # We return the CPI value if it's within the limit or raise an error
-        if abs(date-closest_date) < limit:
-            return CPIResult(date=closest_date,
-                             value=country_data[closest_date])
-        else:
-            raise KeyError('A date close enough was not found in data')
+        return CPIResult(date=date, value=cpi)

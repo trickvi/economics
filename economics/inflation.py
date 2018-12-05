@@ -22,12 +22,13 @@ import economics
 
 InflationResult = collections.namedtuple('Inflation', 'factor value')
 
+
 class Inflation(object):
     """
     Object to provide simple inflation computational functions
     """
 
-    def __init__(self, source=economics.CPI, reference=None, country=None):
+    def __init__(self, reference=None, country="all"):
         """
         Create a new Inflation instance using the CPI class. Optional
         parameters are source which defaults to economics.CPI class, 
@@ -35,21 +36,22 @@ class Inflation(object):
         """
         
         # Create a new data source from the source
-        self.data = source(country=country)
+        self.data = economics.CPI(country=country)
 
         # Set reference and country based on parameters
         self.reference = reference
+        self.country = country if country != "all" and country else None
 
-    def _compute_inflation(self, value, reference_value):
+    @staticmethod
+    def _compute_inflation(value, reference_value):
         """
         Helper function to compute the inflation/deflation based on a value and
         a reference value
         """
-        return InflationResult(
-            factor=value / float(reference_value),
-            value=(value - reference_value) / float(reference_value))
+        res = value / float(reference_value)
+        return InflationResult(factor=res, value=res - 1)
 
-    def get(self, target=datetime.date.today(), reference=None, country=None):
+    def get(self, reference, country,  target=datetime.date.today()):
         """
         Get the inflation/deflation value change for the target date based 
         on the reference date. Target defaults to today and the instance's
@@ -75,8 +77,9 @@ class Inflation(object):
         given country (or objects country if no country is provided). The
         amount has to be provided as it was valued in the reference year.
         """
+        country = country if country else self.country
 
         # Get the inflation for the two dates and country
-        inflation = self.get(target, reference, country)
+        inflation = self.get(reference, country, target)
         # Return the inflated/deflated amount
         return amount * inflation.factor
