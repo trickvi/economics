@@ -51,7 +51,7 @@ class Inflation(object):
         res = value / float(reference_value)
         return InflationResult(factor=res, value=res - 1)
 
-    def get(self, reference, country,  target=datetime.date.today()):
+    def get(self, reference, country=None,  target=datetime.date.today()):
         """
         Get the inflation/deflation value change for the target date based 
         on the reference date. Target defaults to today and the instance's
@@ -61,6 +61,7 @@ class Inflation(object):
 
         # Set country & reference to object's country & reference respectively
         reference = self.reference if reference is None else reference
+        country = self.country if country is None else country
 
         # Get the reference and target indices (values) from the source
         reference_value = self.data.get(reference, country).value
