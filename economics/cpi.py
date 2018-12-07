@@ -68,8 +68,7 @@ class CPI:
 
     def get(self, date=datetime.date.today(), country=None):
         """
-        Get the CPI value for a specific time. Defaults to today. This uses
-        the closest method internally but sets limit to one day.
+        Get the CPI value for a specific time. Defaults to today.
         """
         if not country:
             country = self.country
